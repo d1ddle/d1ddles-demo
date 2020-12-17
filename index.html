@@ -4,7 +4,7 @@
     <h2>WASD to move, Arrow keys to move camera, drag/drop to rotate camera.</h2>
 <head>
     <meta http-equiv="Content-Type" content="text/html" charset="utf-8"/>
-    <title>Babylon - Getting Started</title>
+    <title>d1ddle's Web GL demo</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/cannon.js"></script>
     <style>
@@ -22,16 +22,6 @@
             touch-action: none;
         }
         
-        interface ILoadingScreen {
-            //What happens when loading starts
-            displayLoadingUI: () => void;
-            //What happens when loading stops
-            hideLoadingUI: () => void;
-            //default loader support. Optional!
-            loadingUIBackgroundColor: string;
-            loadingUIText: string;
-        }
-        
     </style>
 </head>
 <body>
@@ -43,27 +33,6 @@
             var createScene = function(){
                 var scene = new BABYLON.Scene(engine);
                 var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5,-10), scene);
-                
-                //interface ILoadingScreen {
-                //What happens when loading starts
-                    //displayLoadingUI: () => void;
-                //What happens when loading stops
-                    //hideLoadingUI: () => void;
-                //default loader support. Optional!
-                    //loadingUIBackgroundColor: string;
-                    //loadingUIText: string;
-                //}
-                
-                //function CustomLoadingScreen( /* variables needed, for example:*/ text) {
-                //init the loader
-                    //this.loadingUIText = text;
-                //}
-                //CustomLoadingScreen.prototype.displayLoadingUI = function() {
-                    //alert(this.loadingUIText);
-                //};
-                //CustomLoadingScreen.prototype.hideLoadingUI = function() {
-                    //alert("Loaded!");
-                //};
                 
                 camera.setTarget(BABYLON.Vector3.Zero());
                 camera.attachControl(canvas, false);
