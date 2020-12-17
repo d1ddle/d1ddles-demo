@@ -7,6 +7,8 @@
     <title>d1ddle's Web GL demo</title>
     <script src="https://cdn.babylonjs.com/babylon.js"></script>
     <script src="https://cdn.babylonjs.com/cannon.js"></script>
+    <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js">
     <style>
         html, body {
             overflow: hidden;
@@ -22,15 +24,47 @@
             touch-action: none;
         }
         
+        #loadingScreen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            color: white;
+            font-size: 50px;
+            text-align: center;
+            background-color: #BB464Bcc;
+            z-index: 9999;
+        }
+        
     </style>
 </head>
 <body>
+    <div id="loadingScreen">default div text</div>
     <canvas id="renderCanvas"></canvas>
     <script>
         window.addEventListener('DOMContentLoaded', function(){
+            
             var canvas = document.getElementById('renderCanvas');
             var engine = new BABYLON.Engine(canvas, true);
-            var createScene = function(){
+        
+            var loadingScreenDiv = window.document.getElementById("loadingScreen");
+                function customLoadingScreen() {
+                console.log("customLoadingScreen creation")
+            }
+            customLoadingScreen.prototype.displayLoadingUI = function () {
+                console.log("customLoadingScreen loading")
+                loadingScreenDiv.innerHTML = "loading";
+            };
+            customLoadingScreen.prototype.hideLoadingUI = function () {
+                console.log("customLoadingScreen loaded")
+                loadingScreenDiv.style.display = "none";
+            };
+        
+            var loadingScreen = new customLoadingScreen();
+            engine.loadingScreen = loadingScreen;
+            engine.displayLoadingUI();
+
+            
+            var delayCreateScene = function () {
                 var scene = new BABYLON.Scene(engine);
                 var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5,-10), scene);
                 
@@ -47,17 +81,27 @@
                 var map = {}; //object for multiple key presses
                 
                 scene.actionManager = new BABYLON.ActionManager(scene);
+                
+                scene.createDefaultCamera(true, true, true);
+                BABYLON.SceneLoader.ImportMesh(
+                "",
+                "http://models.babylonjs.com/CornellBox/",
+                "cornellBox.glb",
+                scene,
+                function () {
+                    engine.hideLoadingUI();
+                });
 
                 scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
                     map[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
 
                 }));
 
-                scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
-                    map[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
-                }));
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
+                map[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
 
-                scene.registerAfterRender(function () {
+            scene.registerAfterRender(function () {
 
                 if ((map["w"] || map["W"])) {
                     sphere.position.z += 0.1;
@@ -81,10 +125,12 @@
 
                 return scene;
             }
+            
             var scene = createScene();
             engine.runRenderLoop(function(){
                 scene.render();
             });
+        
             window.addEventListener('resize', function(){
                 engine.resize();
             });
