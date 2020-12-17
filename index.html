@@ -32,8 +32,20 @@
             var createScene = function(){
                 var scene = new BABYLON.Scene(engine);
                 var camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5,-10), scene);
+                
+                interface ILoadingScreen {
+                //What happens when loading starts
+                    displayLoadingUI: () => void;
+                //What happens when loading stops
+                    hideLoadingUI: () => void;
+                //default loader support. Optional!
+                    loadingUIBackgroundColor: string;
+                    loadingUIText: string;
+                }
+                
                 camera.setTarget(BABYLON.Vector3.Zero());
                 camera.attachControl(canvas, false);
+                
                 var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
                 // create a built-in "sphere" shape; its constructor takes 6 params: name, segment, diameter, scene, updatable, sideOrientation 
                 var sphere = BABYLON.Mesh.CreateSphere('sphere1', 16, 2, scene);
@@ -42,6 +54,7 @@
                 var ground = BABYLON.Mesh.CreateGround('ground1', 12, 12, 5, scene);
                 
                 var map = {}; //object for multiple key presses
+                
                 scene.actionManager = new BABYLON.ActionManager(scene);
 
                 scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
