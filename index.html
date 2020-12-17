@@ -43,6 +43,17 @@
                     loadingUIText: string;
                 }
                 
+                function CustomLoadingScreen( /* variables needed, for example:*/ text) {
+                //init the loader
+                    this.loadingUIText = text;
+                }
+                CustomLoadingScreen.prototype.displayLoadingUI = function() {
+                    alert(this.loadingUIText);
+                };
+                CustomLoadingScreen.prototype.hideLoadingUI = function() {
+                    alert("Loaded!");
+                };
+                
                 camera.setTarget(BABYLON.Vector3.Zero());
                 camera.attachControl(canvas, false);
                 
